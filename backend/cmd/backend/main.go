@@ -13,6 +13,7 @@ var (
 
 func main() {
     http.HandleFunc("/join", routes.JoinRoom)
+    http.HandleFunc("/message", routes.SendMessage)
 
     fmt.Printf("Server running on port: %d\n", port)
     err := http.ListenAndServe(fmt.Sprintf(":%d", port), nil)

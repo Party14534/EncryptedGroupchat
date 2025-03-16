@@ -2,28 +2,22 @@ package routes
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
+	"sync"
 
 	"github.com/gorilla/websocket"
 )
-
-type JoinRoomRequest struct {
-    RoomName string `json:"roomname"`
-}
 
 type JoinRoomResponse struct {
     Code int `json:"code"`
     Msg string `json:"message"`
 }
 
-type Message struct {
-    Username string `json:"username"`
-    Msg string `json:"message"`
-}
 
 type RoomState struct {
     Connections []*websocket.Conn
-    Broadcast chan Message
+    Broadcast chan MessageRequest
     Locked bool
 }
 
@@ -34,34 +28,32 @@ var (
         },
     }
 
-    Rooms = make(map[string]RoomState)
+    Rooms = make(map[string]*RoomState)
+    RoomsMutex = new(sync.Mutex)
 )
-
 
 
 func JoinRoom(w http.ResponseWriter, r *http.Request) {
     w.Header().Set("Content-Type", "application/json")
     encoder := json.NewEncoder(w)
-    
-    var request JoinRoomRequest
+
     response := JoinRoomResponse { 
         Code: 200,
         Msg: "Successfully joined room",
     }
-
-    // Try to decode message
-    decoder := json.NewDecoder(r.Body)
-    err := decoder.Decode(&request)
-    if err != nil {
+    
+    roomName := r.URL.Query().Get("roomname")
+    if roomName == "" {
         response.Code = 400
-        response.Msg = "Invalid Json"
+        response.Msg = "Room name not given in query"
         err := encoder.Encode(response)
         if err != nil { panic(err) }
         return
+        
     }
 
     // Check if room is available
-    if room, ok := Rooms[request.RoomName]; ok {
+    if room, ok := Rooms[roomName]; ok {
         if room.Locked {
             response.Code = 403
             response.Msg = "Room is not available"
@@ -85,8 +77,10 @@ func JoinRoom(w http.ResponseWriter, r *http.Request) {
         return
     }
     
+    // If room does not exist already
     conn, err := upgrader.Upgrade(w, r, nil)
     if err != nil {
+        println(err.Error())
         response.Code = 400
         response.Msg = "Unable to create websocket connection"
         err := encoder.Encode(response)
@@ -94,17 +88,23 @@ func JoinRoom(w http.ResponseWriter, r *http.Request) {
         return
     }
 
-    Rooms[request.RoomName] = RoomState { 
+    RoomsMutex.Lock()
+    Rooms[roomName] = &RoomState { 
         Connections: make([]*websocket.Conn, 0), 
-        Broadcast: make(chan Message),
+        Broadcast: make(chan MessageRequest),
         Locked: false,
     } 
 
-    room, ok := Rooms[request.RoomName]
+    room, ok := Rooms[roomName]
     if ok {
         room.Connections = append(room.Connections, conn)
     }
+    fmt.Println(len(room.Connections))
+    RoomsMutex.Unlock()
+
+    // Start room go routine
+    go HandleMessages(roomName)
 
     err = conn.WriteJSON(response)
-    if err != nil { panic(err) }    
+    if err != nil { panic(err) }
 }
