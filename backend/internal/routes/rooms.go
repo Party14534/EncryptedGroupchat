@@ -72,6 +72,7 @@ func JoinRoom(w http.ResponseWriter, r *http.Request) {
         }
 
         room.Connections = append(room.Connections, conn)
+        response.Code = 201
         err = conn.WriteJSON(response)
         if err != nil { panic(err) }
         return

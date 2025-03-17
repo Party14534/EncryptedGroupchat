@@ -47,9 +47,7 @@ func HandleMessages(roomName string) {
     fmt.Println(len(room.Connections))
     for {
         msg := <- room.Broadcast        
-        fmt.Println(msg.Msg)
         sentMsg := true
-        fmt.Println(len(room.Connections))
         for i, client := range room.Connections {
             fmt.Println(i)
             err := client.WriteJSON(msg)
@@ -59,7 +57,6 @@ func HandleMessages(roomName string) {
                 room.Connections = append(room.Connections[:i], 
                     room.Connections[i+1:]...)        
             } else {
-                fmt.Println("sent successfully")
                 sentMsg = true
             }
         }
