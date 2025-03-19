@@ -44,12 +44,10 @@ func SendMessage(w http.ResponseWriter, r *http.Request) {
 // Go routine
 func HandleMessages(roomName string) {
     room := Rooms[roomName]
-    fmt.Println(len(room.Connections))
     for {
         msg := <- room.Broadcast        
         sentMsg := true
         for i, client := range room.Connections {
-            fmt.Println(i)
             err := client.WriteJSON(msg)
             if err != nil {
                 fmt.Println(err)

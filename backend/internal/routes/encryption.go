@@ -98,10 +98,8 @@ func EncryptRoom(w http.ResponseWriter, r *http.Request) {
         return
     }
 
-    fmt.Println("Herrr")
     if room, ok := Rooms[message.RoomName]; ok {
         for _, conn := range room.Connections {
-            fmt.Println("gottem")
             err = conn.WriteJSON(message)
             if err != nil { panic(err) }
         }

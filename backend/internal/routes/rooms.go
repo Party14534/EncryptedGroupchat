@@ -2,7 +2,6 @@ package routes
 
 import (
 	"encoding/json"
-	"fmt"
 	"net/http"
 	"sync"
 
@@ -100,7 +99,6 @@ func JoinRoom(w http.ResponseWriter, r *http.Request) {
     if ok {
         room.Connections = append(room.Connections, conn)
     }
-    fmt.Println(len(room.Connections))
     RoomsMutex.Unlock()
 
     // Start room go routine
