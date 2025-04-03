@@ -1,0 +1,113 @@
+#loginScreen {
+  height: 100vh;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.loginBox {
+  width: 30vw;
+  height: 60vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: 1rem;
+
+  border: 0.3rem solid rgb(95,97,101);
+  border-radius: 1rem;
+  background: rgb(45,47,51);
+}
+
+.inputContainer {
+  width: 100%;
+  height: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.usernameBox {
+  width: 100%;
+  height: fit-content;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+#usernameInput {
+  width: 80%;
+  height: 3vh;
+  max-height: 3vh;
+  margin: 0 0.5rem;
+
+  resize: none;
+  background: rgb(30,32,36);
+  border: none;
+  border-radius: 0.3vw;
+  outline: none;
+  color: rgb(253,255,251);
+  font-size: 1vw;
+}
+
+#roomInput {
+  width: 80%;
+  height: 3vh;
+  max-height: 3vh;
+  margin: 0 0.5rem;
+
+  resize: none;
+  background: rgb(30,32,36);
+  border: none;
+  border-radius: 0.3vw;
+  outline: none;
+  color: rgb(253,255,251);
+  font-size: 1vw;
+}
+
+.passwordBox {
+  width: 100%;
+  height: fit-content;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+#passwordInput {
+  width: 80%;
+  height: 3vh;
+  max-height: 3vh;
+  margin: 0 0.5rem;
+
+  resize: none;
+  background: rgb(30,32,36);
+  border: none;
+  border-radius: 0.3vw;
+  outline: none;
+  color: rgb(253,255,251);
+  font-size: 1vw;
+}
+
+.loginButton {
+  width: 30%;
+  height: 10%;
+  background: rgb(45,163,228);
+  outline: none;
+
+  border: none;
+  border-radius: 1rem;
+  color: rgb(30,72,104);
+  font-size: 1vw;
+}
+
+.loginStatus {
+  width: 80%;
+  font-size: 2vw;
+  color: red;
+}
