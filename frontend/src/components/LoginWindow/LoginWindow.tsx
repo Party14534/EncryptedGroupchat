@@ -18,6 +18,7 @@ export class RoomData {
     public username: string = ""
     public type: number = -1
     public roomState: boolean = false
+    public finalKey: number = 0
 }
 
 const LoginScreen: React.FC<{setRoomData: (value: RoomData) => void, setParentSocket: (value: WebSocket) => void}> = ({ setRoomData, setParentSocket }) => {
